@@ -230,7 +230,7 @@ if (rev >= 2000 && radio != 1) {
 
 if (on == 1){
 
-radiocosa();
+
 led();
 
 if (roto == 0){
@@ -238,6 +238,7 @@ if (roto == 0){
 marchaup();
 marchadown();
 
+// Subir y bajar revoluciones
   if (digitalRead(rvdownbut) == LOW) {
         rev=rev-subir;
   }
@@ -245,16 +246,18 @@ marchadown();
   if (digitalRead(rvupbut) == LOW) {
         rev=rev+subir;
   }
-
+radiocosa();
 }
 }
 // Roto
 if (roto == 1) {
   if (digitalRead(rvdownbut) == LOW && digitalRead(rvupbut) == LOW) {
      marcha = 1;
+
   }
 }
 
+// Marcha minima y maxima
   int rev_max=13000;
   int rev_min=1000;
 
@@ -270,6 +273,7 @@ if (roto == 1) {
     }
   }
   
+  // Asegurarse de que la marcha no se excede ni baja demasiado
   if (rev < rev_min) {
     rev=rev_min;
   }
@@ -291,5 +295,4 @@ if (roto == 1) {
   rev_old=rev; 
   writeArduinoOnMatrix(marcha);
   }
-
 }
