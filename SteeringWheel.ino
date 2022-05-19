@@ -3,6 +3,7 @@
 LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
 
 int todaslasluces[] = {22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36};
+int debug = 0;
 int A = 22;
 int marcha = 1;
 int i = marcha;
@@ -14,9 +15,11 @@ int rev_old = 0;
 int rev = 1000;
 int roto = 0;
 int radio = 0;
-int subir = 135;
+int subir_old = 135;
+int subir = subir_old;
 int finradio = 0;
 int on = 0;
+int timer = 20;
 
 #include "pitches.h"
 
@@ -70,6 +73,25 @@ void setup() {
     lcd.noDisplay();
 }
 
+void startup() {
+      for (int lights = 0; lights < 15; lights++) {
+      digitalWrite(36-lights, HIGH);
+      delay(50);
+    } 
+    for (int cuanto = 0; cuanto < 4; cuanto++) {
+      for (int lights = 0; lights < 15; lights++) {
+        digitalWrite(36-lights, LOW);
+      } 
+      delay(100);
+      for (int lights = 0; lights < 15; lights++) {
+        digitalWrite(36-lights, HIGH);
+      } 
+      delay(100);
+    }
+      for (int lights = 0; lights < 15; lights++) {
+        digitalWrite(36-lights, LOW);
+      } 
+}
 
 void writeArduinoOnMatrix(int i) {
   /* here is the data for the characters */
@@ -221,6 +243,8 @@ void led() {
 
 void loop() {
 
+if (debug == 0) {
+
 embrague();
 
 //Sonido del coche
@@ -266,7 +290,7 @@ if (roto == 1) {
     if (rev_min != rev) {
       rev=rev-200;
       delay(10);
-      subir=200;
+      subir=subir_old;
     }
     if (rev == 1000){
       roto = 0;
@@ -295,4 +319,43 @@ if (roto == 1) {
   rev_old=rev; 
   writeArduinoOnMatrix(marcha);
   }
+
 }
+
+// Otra version para cualquier easter egg
+  if (digitalRead(rvdownbut) == LOW && digitalRead(rvupbut) == LOW && digitalRead(marchupbut) == LOW && digitalRead(marchdownbut) == LOW && digitalRead(radiobut) == LOW) {
+    
+    if (debug == 0) {
+    startup();
+    debug = 1;
+    } else if (debug == 1) {
+    startup();
+    debug = 0;
+    }
+  }
+
+//DEBUG MODE
+  if (debug == 1) {
+    
+    //KNIGHT RIDER MODE
+    if (digitalRead(marchdownbut) == LOW) {
+
+      for (int count=0;count<15;count++) {
+      digitalWrite(todaslasluces[count], HIGH);
+      delay(timer);
+      digitalWrite(todaslasluces[count-2], LOW);
+      delay(timer);
+      }
+      for (int count=15;count>=0;count--) {
+      digitalWrite(todaslasluces[count], HIGH);
+      delay(timer);
+      digitalWrite(todaslasluces[count+2], LOW);
+      delay(timer);
+      }
+
+    }
+
+  }
+}
+
+
